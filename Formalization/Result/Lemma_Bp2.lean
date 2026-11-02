@@ -1,5 +1,4 @@
 module
-public import Formalization.Result.helpers.Lemma_Bp2.Machinery
 public import Formalization.Axioms
 public import Formalization.Definition
 public import Mathlib
@@ -22,7 +21,7 @@ lemma lemma_B_2 {d : ℕ} {Y : Type*} (S : SmoothingSystem d Y)
     (hpx : ClassProbability S.f y x (L.sigma x) ∈ Set.Ioo (0 : ℝ) 1)
     (hpz : ClassProbability S.f y z (L.sigma z) ∈ Set.Ioo (0 : ℝ) 1) :
     |ScaledClassQuantile S L y x hpx - ScaledClassQuantile S L y z hpz| ≤ ‖x - z‖ := (by
-  -- formalizer:proof-begin
+  -- HumanLean:proof_begin
   -- Both points have the same positive scale in this cell.
   have heq := hconstant i x hx z hz
   have hs := L.positive (L.sigma x) (L.mem_scales x)
@@ -32,7 +31,7 @@ lemma lemma_B_2 {d : ℕ} {Y : Type*} (S : SmoothingSystem d Y)
   have hbound := gaussianQuantileLipschitz S.f S.measurable_fiber y
     (L.sigma x) hs x z hpx hpz'
   simpa only [ScaledClassQuantile, heq] using hbound
-  -- formalizer:proof-end
+  -- HumanLean:proof_end
 )
 
 end Lemma_Bp2

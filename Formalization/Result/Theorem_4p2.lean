@@ -1,5 +1,4 @@
 module
-public import Formalization.Result.helpers.Theorem_4p2.Machinery
 public import Formalization.Axioms
 public import Formalization.Definition
 public import Mathlib
@@ -26,7 +25,7 @@ theorem theorem_4_2 {d : ℕ} {Y : Type*} (S : SmoothingSystem d Y)
     1 - alpha - beta ≤ (C.probability {ω | ∀ x : EuclideanSpace ℝ (Fin d),
       ‖x - x0‖ < min (C.Rc ω) (C.Rsigma ω) →
         S.g x (L.sigma x) = S.g x0 (L.sigma x0)}).toReal := (by
-  -- formalizer:proof-begin
+  -- HumanLean:proof_begin
   letI : IsProbabilityMeasure C.probability := C.isProbability
   let Ec : Set Ω := {ω | ∀ x : EuclideanSpace ℝ (Fin d),
     ‖x - x0‖ ≤ C.Rc ω → S.g x (L.sigma x0) = S.g x0 (L.sigma x0)}
@@ -50,10 +49,10 @@ theorem theorem_4_2 {d : ℕ} {Y : Type*} (S : SmoothingSystem d Y)
         S.g x (L.sigma x) = S.g x0 (L.sigma x0)} := by
     intro ω hω x hx
     have hr := lt_min_iff.mp hx
-    rw [hω.2 x hr.2.le]
-    exact hω.1 x hr.1.le
+    rw [hω.right x hr.right.le]
+    exact hω.left x hr.left.le
   exact hsuccess.trans (measureReal_mono hinclusion)
-  -- formalizer:proof-end
+  -- HumanLean:proof_end
 )
 
 end Theorem_4p2

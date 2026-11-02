@@ -23,12 +23,12 @@ theorem theorem_4_1 {d : ℕ} {Y : Type*} (S : SmoothingSystem d Y)
         (L.positive _ (L.mem_scales x0))
         (hinterior (S.g x0 (L.sigma x0)) x0 (Or.inl rfl))) →
       S.g x (L.sigma x) = S.g x0 (L.sigma x0) := (by
-  -- formalizer:proof-begin
+  -- HumanLean:proof_begin
   classical
   let s := L.sigma x0
   have hs : 0 < s := L.positive _ (L.mem_scales x0)
   intro x hx
-  have hball := (lt_min_iff.mp hx).1.le
+  have hball := (lt_min_iff.mp hx).left.le
   have hscale : L.sigma x = s := hconstant x hball
   have hpx (y : Y) : ClassProbability S.f y x (L.sigma x) ∈ Set.Ioo (0 : ℝ) 1 := by
     rw [hscale]
@@ -73,18 +73,18 @@ theorem theorem_4_1 {d : ℕ} {Y : Type*} (S : SmoothingSystem d Y)
   have hsum := Machinery.distinct_class_probability_sum
     S A B hAB x0 s
   have hcomp : 1 - ClassProbability S.f A x0 s ∈ Set.Ioo (0 : ℝ) 1 := by
-    constructor <;> linarith [(hp0 A).1, (hp0 A).2]
+    constructor <;> linarith [(hp0 A).left, (hp0 A).right]
   have hmono0 := Machinery.normal_quantile_mono
     (hp0 B) hcomp (by linarith : ClassProbability S.f B x0 s ≤ 1 - ClassProbability S.f A x0 s)
   rw [Machinery.normal_quantile_complement (hp0 A)] at hmono0
   have hscaled0 := mul_le_mul_of_nonneg_left hmono0 hs.le
-  have hr := (lt_min_iff.mp hx).2
+  have hr := (lt_min_iff.mp hx).right
   change ‖x - x0‖ < s * Function.invFun (ProbabilityTheory.cdf (ProbabilityTheory.gaussianReal 0 1))
     (ClassProbability S.f A x0 s) at hr
   change L.sigma x0 = s at h0cell
   simp only [h0cell] at hA' hB'
   nlinarith
-  -- formalizer:proof-end
+  -- HumanLean:proof_end
 )
 
 end Theorem_4p1

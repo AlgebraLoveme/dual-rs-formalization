@@ -8,7 +8,7 @@ public section
 
 namespace Theorem_4p1.Machinery
 
--- formalizer:machinery-begin
+-- HumanLean:machinery_begin
 
 lemma normal_cdf_continuous : Continuous (ProbabilityTheory.cdf
     (ProbabilityTheory.gaussianReal 0 1)) := by
@@ -23,16 +23,20 @@ lemma normal_cdf_continuous : Continuous (ProbabilityTheory.cdf
   exact ((MeasureTheory.integrable_const (1 : ℝ)).integrableOn.continuousOn_Iic_primitive_Iic
     x (show x ∈ Set.Iic (x + 1) by simp)).continuousAt (Iic_mem_nhds (by linarith))
 
-lemma normal_cdf_strictMono : StrictMono (ProbabilityTheory.cdf
-    (ProbabilityTheory.gaussianReal 0 1)) := by
+lemma normal_cdf_strictMono :
+    StrictMono (ProbabilityTheory.cdf (ProbabilityTheory.gaussianReal 0 1)) :=
+  by
   intro a b hab
-  have hpos : 0 < ProbabilityTheory.gaussianReal 0 1 (Set.Ioc a b) := by
+  have hpos : 0 < ProbabilityTheory.gaussianReal 0 1 (Set.Ioc a b) :=
+    by
     apply pos_iff_ne_zero.mpr
     intro hz
-    have := ProbabilityTheory.gaussianReal_absolutelyContinuous' 0 (by norm_num : (1 : NNReal) ≠ 0) hz
+    have :=
+      ProbabilityTheory.gaussianReal_absolutelyContinuous' 0 (by norm_num : (1 : NNReal) ≠ 0) hz
     have hba : b ≤ a := by simpa [Real.volume_Ioc] using this
     exact (not_le.mpr hab) hba
-  rw [← ProbabilityTheory.measure_cdf (μ := ProbabilityTheory.gaussianReal 0 1), StieltjesFunction.measure_Ioc] at hpos
+  rw [← ProbabilityTheory.measure_cdf (μ := ProbabilityTheory.gaussianReal 0 1),
+    StieltjesFunction.measure_Ioc] at hpos
   exact sub_pos.mp (ENNReal.ofReal_pos.mp hpos)
 
 lemma normal_cdf_quantile {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :
@@ -76,25 +80,30 @@ lemma normal_quantile_complement {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :
     Function.invFun (ProbabilityTheory.cdf (ProbabilityTheory.gaussianReal 0 1)) (1 - p) =
       -Function.invFun (ProbabilityTheory.cdf (ProbabilityTheory.gaussianReal 0 1)) p := by
   apply normal_cdf_strictMono.injective
-  rw [normal_cdf_quantile (show 1 - p ∈ Set.Ioo (0 : ℝ) 1 by constructor <;> linarith [hp.1, hp.2]),
+  rw [normal_cdf_quantile (show 1 - p ∈ Set.Ioo (0 : ℝ) 1 by constructor <;> linarith [hp.left, hp.right]),
     normal_cdf_neg, normal_cdf_quantile hp]
 
-lemma distinct_class_probability_sum {d : ℕ} {Y : Type*}
-    (S : Definition.SmoothingSystem d Y) (a b : Y) (hab : a ≠ b)
-    (x : EuclideanSpace ℝ (Fin d)) (s : ℝ) :
-    Definition.ClassProbability S.f a x s + Definition.ClassProbability S.f b x s ≤ 1 := by
+lemma distinct_class_probability_sum {d : ℕ} {Y : Type*} (S : Definition.SmoothingSystem d Y) (a b : Y)
+    (hab : a ≠ b) (x : EuclideanSpace ℝ (Fin d)) (s : ℝ) :
+    Definition.ClassProbability S.f a x s + Definition.ClassProbability S.f b x s ≤ 1 :=
+  by
   let μ := (ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d))).map (fun z => s • z)
   have hm : Measurable (fun z : EuclideanSpace ℝ (Fin d) => s • z) := by fun_prop
-  letI : MeasureTheory.IsProbabilityMeasure μ := MeasureTheory.Measure.isProbabilityMeasure_map hm.aemeasurable
-  have hd : Disjoint {δ | S.f (x + δ) = a} {δ | S.f (x + δ) = b} := by
+  letI : MeasureTheory.IsProbabilityMeasure μ :=
+    MeasureTheory.Measure.isProbabilityMeasure_map hm.aemeasurable
+  have hd : Disjoint {δ | S.f (x + δ) = a} {δ | S.f (x + δ) = b} :=
+    by
     apply Set.disjoint_left.mpr
     intro z ha hb
     exact hab (ha.symm.trans hb)
-  have hb : MeasurableSet {δ | S.f (x + δ) = b} :=
-    (S.measurable_fiber b).preimage (by fun_prop)
+  have hb : MeasurableSet {δ | S.f (x + δ) = b} := (S.measurable_fiber b).preimage (by fun_prop)
   change μ.real _ + μ.real _ ≤ 1
   rw [← MeasureTheory.measureReal_union hd hb]
-  exact (MeasureTheory.measureReal_mono (Set.subset_univ _)).trans (by simp)
--- formalizer:machinery-end
+  exact
+    (MeasureTheory.measureReal_mono (Set.subset_univ _)).trans
+      (by simp)
+        -- HumanLean:machinery_end
+
+-- HumanLean:machinery_end
 
 end Theorem_4p1.Machinery
